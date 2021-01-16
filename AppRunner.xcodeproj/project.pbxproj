@@ -14,6 +14,7 @@
 		CE498F9925B28F7700A8E76A /* AppRunner.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE498F9725B28F7700A8E76A /* AppRunner.xcdatamodeld */; };
 		CE498F9B25B28F7A00A8E76A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE498F9A25B28F7A00A8E76A /* Assets.xcassets */; };
 		CE498F9E25B28F7A00A8E76A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE498F9C25B28F7A00A8E76A /* LaunchScreen.storyboard */; };
+		CE498FAA25B2905400A8E76A /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE498FA925B2905400A8E76A /* MapKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		CE498F9A25B28F7A00A8E76A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CE498F9D25B28F7A00A8E76A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CE498F9F25B28F7A00A8E76A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CE498FA925B2905400A8E76A /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +35,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE498FAA25B2905400A8E76A /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +47,7 @@
 			children = (
 				CE498F8D25B28F7700A8E76A /* AppRunner */,
 				CE498F8C25B28F7700A8E76A /* Products */,
+				CE498FA825B2905400A8E76A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -68,6 +72,14 @@
 				CE498F9725B28F7700A8E76A /* AppRunner.xcdatamodeld */,
 			);
 			path = AppRunner;
+			sourceTree = "<group>";
+		};
+		CE498FA825B2905400A8E76A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CE498FA925B2905400A8E76A /* MapKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -293,6 +305,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PDY29GF949;
 				INFOPLIST_FILE = AppRunner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -300,7 +313,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gmail.appl.leslie.AppRunner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -312,6 +325,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PDY29GF949;
 				INFOPLIST_FILE = AppRunner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -319,7 +333,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gmail.appl.leslie.AppRunner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
