@@ -4,16 +4,21 @@
 //
 //  Created by leslie on 1/16/21.
 //
-
 import UIKit
+import MapKit
+import CoreLocation
 
-class ViewController: UIViewController {
+// MARK: - UIViewController
+class LocationVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
 
-
 }
 
+// MARK: - CLLocationManagerDelegate
+extension LocationVC: CLLocationManagerDelegate {
+    
+}
