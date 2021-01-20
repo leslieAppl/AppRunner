@@ -19,6 +19,10 @@
 		CE58B78725B298BC00966760 /* CurrentRunVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58B78625B298BC00966760 /* CurrentRunVC.swift */; };
 		CE58B78A25B29AF800966760 /* RunLogVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58B78925B29AF800966760 /* RunLogVC.swift */; };
 		CE58B78D25B29E5F00966760 /* ShowRouteVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58B78C25B29E5F00966760 /* ShowRouteVC.swift */; };
+		CE58B7BC25B8775900966760 /* Location+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58B7B825B8775900966760 /* Location+CoreDataClass.swift */; };
+		CE58B7BD25B8775900966760 /* Location+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58B7B925B8775900966760 /* Location+CoreDataProperties.swift */; };
+		CE58B7BE25B8775900966760 /* Run+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58B7BA25B8775900966760 /* Run+CoreDataClass.swift */; };
+		CE58B7BF25B8775900966760 /* Run+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58B7BB25B8775900966760 /* Run+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +40,10 @@
 		CE58B78625B298BC00966760 /* CurrentRunVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentRunVC.swift; sourceTree = "<group>"; };
 		CE58B78925B29AF800966760 /* RunLogVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunLogVC.swift; sourceTree = "<group>"; };
 		CE58B78C25B29E5F00966760 /* ShowRouteVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowRouteVC.swift; sourceTree = "<group>"; };
+		CE58B7B825B8775900966760 /* Location+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Location+CoreDataClass.swift"; sourceTree = "<group>"; };
+		CE58B7B925B8775900966760 /* Location+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Location+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		CE58B7BA25B8775900966760 /* Run+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Run+CoreDataClass.swift"; sourceTree = "<group>"; };
+		CE58B7BB25B8775900966760 /* Run+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Run+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +78,7 @@
 		CE498F8D25B28F7700A8E76A /* AppRunner */ = {
 			isa = PBXGroup;
 			children = (
+				CE58B7C125B8778E00966760 /* NSManagedObject */,
 				CE58B78025B2958B00966760 /* ViewController */,
 				CE498F8E25B28F7700A8E76A /* AppDelegate.swift */,
 				CE498F9025B28F7700A8E76A /* SceneDelegate.swift */,
@@ -100,6 +109,17 @@
 				CE58B78C25B29E5F00966760 /* ShowRouteVC.swift */,
 			);
 			path = ViewController;
+			sourceTree = "<group>";
+		};
+		CE58B7C125B8778E00966760 /* NSManagedObject */ = {
+			isa = PBXGroup;
+			children = (
+				CE58B7B825B8775900966760 /* Location+CoreDataClass.swift */,
+				CE58B7B925B8775900966760 /* Location+CoreDataProperties.swift */,
+				CE58B7BA25B8775900966760 /* Run+CoreDataClass.swift */,
+				CE58B7BB25B8775900966760 /* Run+CoreDataProperties.swift */,
+			);
+			path = NSManagedObject;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -175,11 +195,15 @@
 				CE498F9325B28F7700A8E76A /* LocationVC.swift in Sources */,
 				CE498F9925B28F7700A8E76A /* AppRunner.xcdatamodeld in Sources */,
 				CE58B78425B2973900966760 /* BeginRunVC.swift in Sources */,
+				CE58B7BF25B8775900966760 /* Run+CoreDataProperties.swift in Sources */,
 				CE58B78A25B29AF800966760 /* RunLogVC.swift in Sources */,
+				CE58B7BD25B8775900966760 /* Location+CoreDataProperties.swift in Sources */,
 				CE498F8F25B28F7700A8E76A /* AppDelegate.swift in Sources */,
 				CE58B78D25B29E5F00966760 /* ShowRouteVC.swift in Sources */,
+				CE58B7BC25B8775900966760 /* Location+CoreDataClass.swift in Sources */,
 				CE58B78725B298BC00966760 /* CurrentRunVC.swift in Sources */,
 				CE498F9125B28F7700A8E76A /* SceneDelegate.swift in Sources */,
+				CE58B7BE25B8775900966760 /* Run+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
