@@ -14,7 +14,7 @@
         <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Location"/>
     </entity>
     <elements>
-        <element name="Run" positionX="-63" positionY="-18" width="128" height="148"/>
         <element name="Location" positionX="-54" positionY="36" width="128" height="73"/>
+        <element name="Run" positionX="-63" positionY="-18" width="128" height="148"/>
     </elements>
 </model>

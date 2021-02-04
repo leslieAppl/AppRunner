@@ -18,6 +18,7 @@ class RunLogVC: LocationVC {
         super.viewDidLoad()
 
         
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {

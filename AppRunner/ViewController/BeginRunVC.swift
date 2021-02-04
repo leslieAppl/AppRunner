@@ -7,13 +7,14 @@
 
 import UIKit
 import MapKit
+import CoreData
 
 // MARK: - LocationVC
 class BeginRunVC: LocationVC {
     
     // MARK: - Constants
     let lcationVC = LocationVC()
-
+    
     // MARK: - IBOutlet
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var lastRunBGView: UIView!
@@ -24,9 +25,16 @@ class BeginRunVC: LocationVC {
     @IBOutlet weak var lastRunDurationLbl: UILabel!
     @IBOutlet weak var lastRunDistanceLbl: UILabel!
 
+    // MARK: - Variables And Properties
+    var context: NSManagedObjectContext!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let app = UIApplication.shared
+        let appDelegate = app.delegate as! AppDelegate
+        self.context = appDelegate.context
+        print("BeginRunVC: \(self.context)")
     }
     
     override func viewDidAppear(_ animated: Bool) {

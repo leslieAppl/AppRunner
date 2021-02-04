@@ -78,6 +78,7 @@
 		CE498F8D25B28F7700A8E76A /* AppRunner */ = {
 			isa = PBXGroup;
 			children = (
+				CE71DAF325CBE9D500772F9A /* Extensions */,
 				CE58B7C125B8778E00966760 /* NSManagedObject */,
 				CE58B78025B2958B00966760 /* ViewController */,
 				CE498F8E25B28F7700A8E76A /* AppDelegate.swift */,
@@ -120,6 +121,13 @@
 				CE58B7BB25B8775900966760 /* Run+CoreDataProperties.swift */,
 			);
 			path = NSManagedObject;
+			sourceTree = "<group>";
+		};
+		CE71DAF325CBE9D500772F9A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
