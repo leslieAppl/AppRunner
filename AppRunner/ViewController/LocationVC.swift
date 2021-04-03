@@ -13,15 +13,18 @@ class LocationVC: UIViewController {
     
     let locationManager = CLLocationManager()
 
+    // MARK: - View Controller
     override func viewDidLoad() {
         super.viewDidLoad()
         
     }
     
+    // MARK: - Internal Methods
     func checkLocationServices() {
         // Check device's setting > private > location services that if it's truned on.
         if CLLocationManager.locationServicesEnabled() {
-            
+            setupLocationManager()
+            checkLocationAuthorization()
         }
         else {
             // Show alert that let the user know they have to turn this on.
