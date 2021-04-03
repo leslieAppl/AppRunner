@@ -61,9 +61,9 @@
 		<string>location</string>
 	</array>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Tread will use your location for tracking your run.</string>
+    <string>App Runner will use your location for tracking your run.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Tread will use your location for tracking your run.</string>
+    <string>App Runner will use your location for tracking your run.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
