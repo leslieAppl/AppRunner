@@ -2,7 +2,7 @@
 //  Location+CoreDataProperties.swift
 //  AppRunner
 //
-//  Created by leslie on 1/20/21.
+//  Created by leslie on 4/8/21.
 //
 //
 
@@ -16,8 +16,9 @@ extension Location {
         return NSFetchRequest<Location>(entityName: "Location")
     }
 
-    @NSManaged public var longitude: Double
     @NSManaged public var latitude: Double
+    @NSManaged public var longitude: Double
+    @NSManaged public var run: Run?
 
 }
 
