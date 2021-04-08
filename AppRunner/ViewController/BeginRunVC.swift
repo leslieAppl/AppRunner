@@ -27,7 +27,9 @@ class BeginRunVC: LocationVC {
 
     // MARK: - Variables And Properties
     var context: NSManagedObjectContext!
-
+    var locations: [NSManagedObject] = []
+    var runs: [NSManagedObject] = []
+    
     // MARK: - View Controller
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,7 +76,6 @@ class BeginRunVC: LocationVC {
         }
     }
     
-    // TODO: - Add last run to map
     func addLastRunToMap() -> MKPolyline? {
         
         // TODO: - Get last run from core data
