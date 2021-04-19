@@ -22,6 +22,7 @@ extension Run {
     @NSManaged public var distance: Double
     @NSManaged public var duration: Int16
     @NSManaged public var id: String?
+    // Unlike 'Array's, 'Set's don't allow accessing their members by index. In face, there's no ordering at all! If you need to access individual objects by index, you can check the Ordeded checkbox in the visual editor. Core Data will then represent the relationship as an NSOrderedSet
     @NSManaged public var locations: NSOrderedSet?
 
 }

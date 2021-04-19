@@ -99,6 +99,26 @@ extension NSDate {
         let hour = calendar.component(.hour, from: self as Date)
         let minute = calendar.component(.minute, from: self as Date)
         
-        return "\(month)/\(day)/\(hour):\(minute)"
+        return "\(year)/\(month)/\(day)/\(hour):\(minute)"
+    }
+}
+
+extension Date {
+    func formatDateToString() -> String {
+        let today = self as Date
+        let formatter = DateFormatter()
+        formatter.dateFormat = "E, d MMM y, HH:mm"
+        return formatter.string(from: today)
+    }
+    
+    func getDateString() -> String {
+        let calendar = Calendar.current
+        let year = calendar.component(.year, from: self as Date)
+        let month = calendar.component(.month, from: self as Date)
+        let day = calendar.component(.day, from: self as Date)
+        let hour = calendar.component(.hour, from: self as Date)
+        let minute = calendar.component(.minute, from: self as Date)
+        
+        return "\(year)/\(month)/\(day)/\(hour):\(minute)"
     }
 }
