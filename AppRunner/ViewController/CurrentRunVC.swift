@@ -21,7 +21,7 @@ class CurrentRunVC: LocationVC {
     var context: NSManagedObjectContext!
     
     // Holding your fetch request
-    var locationFetchRequest: NSFetchRequest<Location>?
+    var locFetchRequest: NSFetchRequest<Location>?
     var runFetchRequest: NSFetchRequest<Run>?
     
     var asyncLocFetchRequest: NSAsynchronousFetchRequest<Location>?
@@ -29,12 +29,12 @@ class CurrentRunVC: LocationVC {
     
     // The array of core data manged objects you'll use to populate the table view.
     var runs: [Run] = []
-    var coodinateLocations = [Location]()
+    var locations = [Location]()
 //    var locations: [Location] = []
 
     // MARK: - Variables and Propeties - Timer
     var timer = Timer()
-    var counter = 0 // For calculating the speed and pace as seconds
+    var counter = 0
     
     var timerIsOn: Bool {
         get {
@@ -64,8 +64,7 @@ class CurrentRunVC: LocationVC {
         }
     }
     
-
-    // MARK: - Variables and Propeties - Map
+    // MARK: - Variables and Propeties - Map & Run
     var coordinates = [CLLocationCoordinate2D]()
     var startLocation: CLLocation!
     var lastLocation: CLLocation!
@@ -90,12 +89,11 @@ class CurrentRunVC: LocationVC {
 
     @IBOutlet weak var swipeBGImageView: UIImageView!
     @IBOutlet weak var sliderImageView: UIButton!
+    
     @IBOutlet weak var durrationLbl: UILabel!
     @IBOutlet weak var distanceLbl: UILabel!
-    
     @IBOutlet weak var currentPaceLbl: UILabel!
     @IBOutlet weak var currentSpeedLbl: UILabel!
-    
     @IBOutlet weak var avePaceLbl: UILabel!
     @IBOutlet weak var aveSpeedLbl: UILabel!
     
@@ -110,34 +108,33 @@ class CurrentRunVC: LocationVC {
         let appDelegate = app.delegate as! AppDelegate
         self.context = appDelegate.context
         
+        // Print simulater sotre url.
         guard let storeURL = context.persistentStoreCoordinator?.persistentStores.first?.url else { return }
-        print("Store url: \(String(describing: storeURL))")
+        print("Simulator store url: \(String(describing: storeURL))")
         
         // NSAsynchronousFetchRequest: Performing fetches in the background
-        // Async Location Fetch
-        let locFetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
-        self.locationFetchRequest = locFetchRequest
-        self.asyncLocFetchRequest = NSAsynchronousFetchRequest(fetchRequest: locFetchRequest, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
+        let lfr: NSFetchRequest<Location> = Location.fetchRequest()
+        self.locFetchRequest = lfr
+        self.asyncLocFetchRequest = NSAsynchronousFetchRequest(fetchRequest: lfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
             
             guard let locs = result.finalResult else { return }
-            self.coodinateLocations = locs
+            self.locations = locs
         })
         
-        // Async Run Fetch
-        let runFetchRequest: NSFetchRequest<Run> = Run.fetchRequest()
-        self.runFetchRequest = runFetchRequest
-        self.asyncRunFetchRequest = NSAsynchronousFetchRequest(fetchRequest: runFetchRequest, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
+        let rfr: NSFetchRequest<Run> = Run.fetchRequest()
+        self.runFetchRequest = rfr
+        self.asyncRunFetchRequest = NSAsynchronousFetchRequest(fetchRequest: rfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
             
             guard let runs = result.finalResult else { return }
             self.runs = runs
         })
         
         do {
-            guard let asynLocFetchRequest = self.asyncLocFetchRequest,
-                  let asynRunFetchRequest = self.asyncRunFetchRequest else { return }
+            guard let alfr = self.asyncLocFetchRequest,
+                  let arfr = self.asyncRunFetchRequest else { return }
             
-            try context.execute(asynLocFetchRequest)
-            try context.execute(asynRunFetchRequest)
+            try context.execute(alfr)
+            try context.execute(arfr)
             
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
@@ -189,7 +186,7 @@ class CurrentRunVC: LocationVC {
         run.aveSpeed = runAveSpeed
         run.duration = Int16(counter)
         run.distance = runDistance
-        for location in coodinateLocations {
+        for location in locations {
             run.addToLocations(location)
         }
         
@@ -251,86 +248,6 @@ class CurrentRunVC: LocationVC {
     func centerCurrentRoute(from lastLocation: CLLocation) -> MKCoordinateRegion {
         
         return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: lastLocation.coordinate.latitude, longitude: lastLocation.coordinate.longitude), span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
-    }
-
-
-    // MARK: - Location Delegate Methods
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        // TODO: - Tracking Location
-        self.logTimestamp = locations.last?.timestamp as NSDate? // Time
-        self.logAccuracy = locations.last!.horizontalAccuracy // Meters
-        self.logSpeed = ((locations.last!.speed * 3600) / 1000).setDecimalPlaces(places: 2) // Meters Per Second
-        self.logDirection = locations.last!.course // Degrees and relative to due north
-        
-        print(">>time: \(String(describing: self.logTimestamp))")
-        print(">>logAccuracy: \(self.logAccuracy)")
-        print(">>logSpeed: \(self.logSpeed)")
-        print(">>logDirection: \(self.logDirection)")
-        print()
-        
-        if locations.last?.speed.isLess(than: 0) ?? true {
-            
-        }
-        else {
-            
-            if startLocation == nil {
-                startLocation = locations.first
-            }
-            else if let location = locations.last {
-                eachDistance = lastLocation.distance(from: location)
-                runDistance += lastLocation.distance(from: location)
-                
-                // Core Data
-                let newLocation = Location(context: context)
-                newLocation.latitude = Double(lastLocation.coordinate.latitude)
-                newLocation.longitude = Double(lastLocation.coordinate.longitude)
-                
-                guard context.hasChanges else {
-                    return
-                }
-                
-                do {
-                    try context.save()
-                    self.coodinateLocations.insert(newLocation, at: 0)
-                    
-                } catch let error as NSError {
-                    print("Unresolved error \(error), \(error.userInfo)")
-                }
-                
-                // Adding Polyline
-                if let polyline = addCurrentRunToMap(from: lastLocation) {
-                    
-                    if mapView.overlays.count > 0 {
-                        mapView.removeOverlays(mapView.overlays)
-                    }
-                    
-                    // this method will call: mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer at MKOverlay protocol by the map view delegate.
-                    mapView.addOverlay(polyline)
-
-                }
-                else {
-                    
-                }
-
-                distanceLbl.text = runDistance.metersToKmForString(places: 2)
-                distanceLbl.font = UIFont.monospacedDigitSystemFont(ofSize: 40, weight: .bold)
-                
-                runCurrentSpeed = ((location.speed) * 3600) / 1000
-                runCurrentPace = calculateCurrentPace(speed: runCurrentSpeed)
-                currentSpeedLbl.text = runCurrentSpeed.setDecimalPlaces(places: 2)
-                currentSpeedLbl.font = UIFont.monospacedDigitSystemFont(ofSize: 30, weight: .bold)
-                currentPaceLbl.text = runCurrentPace.formatTimeDurationToString()
-                currentPaceLbl.font = UIFont.monospacedDigitSystemFont(ofSize: 30, weight: .bold)
-                
-                avePaceLbl.text = calculateAvePace(time: counter, m: runDistance)
-                avePaceLbl.font = UIFont.monospacedDigitSystemFont(ofSize: 30, weight: .bold)
-                aveSpeedLbl.text = calculateAveSpeed(time: counter, m: runDistance)
-                aveSpeedLbl.font = UIFont.monospacedDigitSystemFont(ofSize: 30, weight: .bold)
-            }
-            
-            lastLocation = locations.last   // important!! don't miss the first "lastLocation" initializing.
-
-        }
     }
     
     // MARK: - Timer Model
@@ -445,6 +362,88 @@ class CurrentRunVC: LocationVC {
                     sliderView.center.x = self.swipeBGImageView.center.x - leftEnd
                 }
             }
+        }
+    }
+}
+
+// MARK: - CLLocationManagerDelegate Methods
+extension CurrentRunVC {
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        // TODO: - Tracking Location
+        self.logTimestamp = locations.last?.timestamp as NSDate? // Time
+        self.logAccuracy = locations.last!.horizontalAccuracy // Meters
+        self.logSpeed = ((locations.last!.speed * 3600) / 1000).setDecimalPlaces(places: 2) // Meters Per Second
+        self.logDirection = locations.last!.course // Degrees and relative to due north
+        
+        print(">>time: \(String(describing: self.logTimestamp))")
+        print(">>logAccuracy: \(self.logAccuracy)")
+        print(">>logSpeed: \(self.logSpeed)")
+        print(">>logDirection: \(self.logDirection)")
+        print()
+        
+        if locations.last?.speed.isLess(than: 0) ?? true {
+            
+        }
+        else {
+            
+            if startLocation == nil {
+                startLocation = locations.first
+            }
+            else if let location = locations.last {
+                eachDistance = lastLocation.distance(from: location)
+                runDistance += lastLocation.distance(from: location)
+                
+                // Core Data
+                let newLocation = Location(context: context)
+                newLocation.latitude = Double(lastLocation.coordinate.latitude)
+                newLocation.longitude = Double(lastLocation.coordinate.longitude)
+                
+                guard context.hasChanges else {
+                    return
+                }
+                
+                do {
+                    try context.save()
+                    self.locations.insert(newLocation, at: 0)
+                    
+                } catch let error as NSError {
+                    print("Unresolved error \(error), \(error.userInfo)")
+                }
+                
+                // Adding Polyline
+                if let polyline = addCurrentRunToMap(from: lastLocation) {
+                    
+                    if mapView.overlays.count > 0 {
+                        mapView.removeOverlays(mapView.overlays)
+                    }
+                    
+                    // this method will call: mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer at MKOverlay protocol by the map view delegate.
+                    mapView.addOverlay(polyline)
+
+                }
+                else {
+                    
+                }
+
+                distanceLbl.text = runDistance.metersToKmForString(places: 2)
+                distanceLbl.font = UIFont.monospacedDigitSystemFont(ofSize: 40, weight: .bold)
+                
+                runCurrentSpeed = ((location.speed) * 3600) / 1000
+                runCurrentPace = calculateCurrentPace(speed: runCurrentSpeed)
+                currentSpeedLbl.text = runCurrentSpeed.setDecimalPlaces(places: 2)
+                currentSpeedLbl.font = UIFont.monospacedDigitSystemFont(ofSize: 30, weight: .bold)
+                currentPaceLbl.text = runCurrentPace.formatTimeDurationToString()
+                currentPaceLbl.font = UIFont.monospacedDigitSystemFont(ofSize: 30, weight: .bold)
+                
+                avePaceLbl.text = calculateAvePace(time: counter, m: runDistance)
+                avePaceLbl.font = UIFont.monospacedDigitSystemFont(ofSize: 30, weight: .bold)
+                aveSpeedLbl.text = calculateAveSpeed(time: counter, m: runDistance)
+                aveSpeedLbl.font = UIFont.monospacedDigitSystemFont(ofSize: 30, weight: .bold)
+            }
+            
+            lastLocation = locations.last   // important!! don't miss the first "lastLocation" initializing.
+
         }
     }
 }
