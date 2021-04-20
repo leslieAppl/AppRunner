@@ -338,26 +338,42 @@ class CurrentRunVC: LocationVC {
         
         let leftEnd: CGFloat = 83
         let rightEnd: CGFloat = 133
+        
+        // sliderView - sliderImageView: UIButton which has the gesture recognizer
         if let sliderView = sender.view {
-            if sender.state == UIGestureRecognizer.State.began || sender.state == UIGestureRecognizer.State.changed {
+            
+            if sender.state == UIGestureRecognizer.State.began ||
+                sender.state == UIGestureRecognizer.State.changed {
                 
                 let translation = sender.translation(in: self.view)
                 
-                if sliderView.center.x >= (swipeBGImageView.center.x - leftEnd) && sliderView.center.x <= (swipeBGImageView.center.x + rightEnd) {
+                // If slider view is between the left end and right end:
+                if sliderView.center.x >= (swipeBGImageView.center.x - leftEnd) &&
+                    sliderView.center.x <= (swipeBGImageView.center.x + rightEnd) {
+                    
                     sliderView.center.x = sliderView.center.x + translation.x
-                } else if sliderView.center.x >= (swipeBGImageView.center.x + rightEnd) {
+                    
+                }
+                // If slider view is over right end:
+                else if sliderView.center.x >= (swipeBGImageView.center.x + rightEnd) {
+                    
                     sliderView.center.x = swipeBGImageView.center.x + rightEnd
                     
                     // End Run Code goes here
                     endRun()
                       
                     dismiss(animated: true, completion: nil)
-                } else if sliderView.center.x <= (swipeBGImageView.center.x - leftEnd) {
+                }
+                // If slider view is less than left end point:
+                else if sliderView.center.x <= (swipeBGImageView.center.x - leftEnd) {
+                    
                     sliderView.center.x = swipeBGImageView.center.x - leftEnd
                 }
                 
                 sender.setTranslation(CGPoint.zero, in: self.view)
-            } else if sender.state == UIGestureRecognizer.State.ended {
+            }
+            else if sender.state == UIGestureRecognizer.State.ended {
+                
                 UIView.animate(withDuration: 0.1) {
                     sliderView.center.x = self.swipeBGImageView.center.x - leftEnd
                 }
