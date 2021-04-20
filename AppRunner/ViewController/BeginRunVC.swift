@@ -15,6 +15,26 @@ class BeginRunVC: LocationVC {
     // MARK: - Constants
     let lcationVC = LocationVC()
     
+    // MARK: - Variables and Propeties - Core Data
+    var coreDataStack: AppDelegate!
+    var context: NSManagedObjectContext!
+    
+    var locFetchRequest: NSFetchRequest<Location>?
+    var runFetchRequest: NSFetchRequest<Run>?
+    
+    var asyncLocFetchRequest: NSAsynchronousFetchRequest<Location>?
+    var asyncRunFetchRequest: NSAsynchronousFetchRequest<Run>?
+    
+    var locations: [Location] = []
+    var runs: [Run] = []
+    
+    var lastRun: Run?
+        
+    // NSSortDescriptor
+    lazy var dateSortDescriptor: NSSortDescriptor = {
+        return NSSortDescriptor(key: #keyPath(Run.date), ascending: true)
+    }()
+    
     // MARK: - IBOutlet
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var lastRunBGView: UIView!
@@ -24,80 +44,57 @@ class BeginRunVC: LocationVC {
     @IBOutlet weak var lastRunSpeedLbl: UILabel!
     @IBOutlet weak var lastRunDurationLbl: UILabel!
     @IBOutlet weak var lastRunDistanceLbl: UILabel!
-
-    // MARK: - Variables And Properties
-    var context: NSManagedObjectContext!
-    
-    // Holding your fetch request
-    var locationFetchRequest: NSFetchRequest<Location>?
-    var runFetchRequest: NSFetchRequest<Run>?
-    
-    var asyncLocFetchRequest: NSAsynchronousFetchRequest<Location>?
-    var asyncRunFetchRequest: NSAsynchronousFetchRequest<Run>?
-    
-    // The array of core data manged objects you'll use to populate the table view.
-    var locations: [Location] = []
-    var runs: [Run] = []
-    
-    var lastRun: Run?
-    
-    // NSPredicates
-//    lazy var lastRunPredicate: NSPredicate = {
-//        return NSPredicate(format: "%K == %K", #keyPath(Run.date), #keyPath(Run.date))
-//    }()
-    
-    // NSSortDescriptor
-    lazy var dateSortDescriptor: NSSortDescriptor = {
-        return NSSortDescriptor(key: #keyPath(Run.date), ascending: true)
-    }()
     
     // MARK: - View Controller
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Core Data
+        // MARK: - Core Data
         let app = UIApplication.shared
-        let appDelegate = app.delegate as! AppDelegate
-        self.context = appDelegate.context
+        guard let appDelegate = app.delegate as? AppDelegate else { return }
+        
+        self.coreDataStack = appDelegate
+        self.context = coreDataStack.context
+        
+        // Print simulater sotre url.
+        guard let storeURL = context.persistentStoreCoordinator?.persistentStores.first?.url else { return }
+        print("Simulator store url: \(String(describing: storeURL))")
         
         // NSAsynchronousFetchRequest: Performing fetches in the background
-        let locFetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
-        self.locationFetchRequest = locFetchRequest
-        let runFetchRequest: NSFetchRequest<Run> = Run.fetchRequest()
-        self.runFetchRequest = runFetchRequest
-        
-        self.asyncLocFetchRequest = NSAsynchronousFetchRequest(fetchRequest: locFetchRequest, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
+        let lfr: NSFetchRequest<Location> = Location.fetchRequest()
+        self.locFetchRequest = lfr
+        self.asyncLocFetchRequest = NSAsynchronousFetchRequest(fetchRequest: lfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
             
             guard let locs = result.finalResult else { return }
             self.locations = locs
         })
         
-        self.asyncRunFetchRequest = NSAsynchronousFetchRequest(fetchRequest: runFetchRequest, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
+        let rfr: NSFetchRequest<Run> = Run.fetchRequest()
+        self.runFetchRequest = rfr
+        self.asyncRunFetchRequest = NSAsynchronousFetchRequest(fetchRequest: rfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
             
             guard let runs = result.finalResult else { return }
             self.runs = runs
         })
         
         do {
-            guard let asynLocFetchRequest = self.asyncLocFetchRequest,
-                  let asynRunFetchRequest = self.asyncRunFetchRequest else { return }
+            guard let alfr = self.asyncLocFetchRequest,
+                  let arfr = self.asyncRunFetchRequest else { return }
             
-            try context.execute(asynLocFetchRequest)
-            try context.execute(asynRunFetchRequest)
+            try context.execute(alfr)
+            try context.execute(arfr)
             
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
         }
-        
-        // Core Location
+
+        // MARK: - Core Location
         checkLocationServices()
         
-        // Map View
+        // MARK: - Map View
         mapView.delegate = self
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .none
-        print("User Location: \(mapView.userLocation.coordinate)")
-        print("User Location Updating: \(mapView.userLocation.isUpdating)")
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -106,8 +103,7 @@ class BeginRunVC: LocationVC {
         setupMapView()
     }
     
-    // MARK: - Internal Methods
-    // Core Data Methods
+    // MARK: - Internal Methods - Core Data
     func fetchLastRun() {
         
         guard let runFetch = self.runFetchRequest else { return }

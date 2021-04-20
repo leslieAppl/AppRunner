@@ -18,19 +18,17 @@ class CurrentRunVC: LocationVC {
     let TOTAL_TIME_UPDATED = Notification.Name("totalTimeUpdated")
   
     // MARK: - Variables and Propeties - Core Data
+    var coreDataStack: AppDelegate!
     var context: NSManagedObjectContext!
     
-    // Holding your fetch request
     var locFetchRequest: NSFetchRequest<Location>?
     var runFetchRequest: NSFetchRequest<Run>?
     
     var asyncLocFetchRequest: NSAsynchronousFetchRequest<Location>?
     var asyncRunFetchRequest: NSAsynchronousFetchRequest<Run>?
     
-    // The array of core data manged objects you'll use to populate the table view.
     var runs: [Run] = []
-    var locations = [Location]()
-//    var locations: [Location] = []
+    var locations: [Location] = []
 
     // MARK: - Variables and Propeties - Timer
     var timer = Timer()
@@ -105,13 +103,11 @@ class CurrentRunVC: LocationVC {
 
         // MARK: - Core Data
         let app = UIApplication.shared
-        let appDelegate = app.delegate as! AppDelegate
-        self.context = appDelegate.context
+        guard let appDelegate = app.delegate as? AppDelegate else { return }
         
-        // Print simulater sotre url.
-        guard let storeURL = context.persistentStoreCoordinator?.persistentStores.first?.url else { return }
-        print("Simulator store url: \(String(describing: storeURL))")
-        
+        self.coreDataStack = appDelegate
+        self.context = coreDataStack.context
+                
         // NSAsynchronousFetchRequest: Performing fetches in the background
         let lfr: NSFetchRequest<Location> = Location.fetchRequest()
         self.locFetchRequest = lfr
@@ -190,16 +186,7 @@ class CurrentRunVC: LocationVC {
             run.addToLocations(location)
         }
         
-        guard context.hasChanges else {
-            return
-        }
-        
-        do {
-            try context.save()
-        } catch let error as NSError {
-            print("Unresolved error \(error), \(error.userInfo)")
-        }
-
+        coreDataStack.saveContext()
     }
     
     func pauseRun() {
@@ -392,11 +379,11 @@ extension CurrentRunVC {
         self.logSpeed = ((locations.last!.speed * 3600) / 1000).setDecimalPlaces(places: 2) // Meters Per Second
         self.logDirection = locations.last!.course // Degrees and relative to due north
         
-        print(">>time: \(String(describing: self.logTimestamp))")
-        print(">>logAccuracy: \(self.logAccuracy)")
-        print(">>logSpeed: \(self.logSpeed)")
-        print(">>logDirection: \(self.logDirection)")
-        print()
+//        print(">>time: \(String(describing: self.logTimestamp))")
+//        print(">>logAccuracy: \(self.logAccuracy)")
+//        print(">>logSpeed: \(self.logSpeed)")
+//        print(">>logDirection: \(self.logDirection)")
+//        print()
         
         if locations.last?.speed.isLess(than: 0) ?? true {
             
@@ -415,17 +402,8 @@ extension CurrentRunVC {
                 newLocation.latitude = Double(lastLocation.coordinate.latitude)
                 newLocation.longitude = Double(lastLocation.coordinate.longitude)
                 
-                guard context.hasChanges else {
-                    return
-                }
-                
-                do {
-                    try context.save()
-                    self.locations.insert(newLocation, at: 0)
-                    
-                } catch let error as NSError {
-                    print("Unresolved error \(error), \(error.userInfo)")
-                }
+                coreDataStack.saveContext()
+                self.locations.insert(newLocation, at: 0)
                 
                 // Adding Polyline
                 if let polyline = addCurrentRunToMap(from: lastLocation) {
