@@ -12,7 +12,12 @@ import CoreData
 // MARK: - LocationVC
 class CurrentRunVC: LocationVC {
 
-    // MARK: - Core Data Variables
+    // MARK: - Constants - Timer Notification
+    let TIMER_IS_ON_UPDATED = Notification.Name("timerIsOnUpdated")
+    let START_TIME_UPDATED = Notification.Name("startTimeUpdated")
+    let TOTAL_TIME_UPDATED = Notification.Name("totalTimeUpdated")
+  
+    // MARK: - Variables and Propeties - Core Data
     var context: NSManagedObjectContext!
     
     // Holding your fetch request
@@ -23,10 +28,11 @@ class CurrentRunVC: LocationVC {
     var asyncRunFetchRequest: NSAsynchronousFetchRequest<Run>?
     
     // The array of core data manged objects you'll use to populate the table view.
-    var locations: [Location] = []
     var runs: [Run] = []
+    var coodinateLocations = [Location]()
+//    var locations: [Location] = []
 
-    // MARK: - Timer variables
+    // MARK: - Variables and Propeties - Timer
     var timer = Timer()
     var counter = 0 // For calculating the speed and pace as seconds
     
@@ -58,32 +64,26 @@ class CurrentRunVC: LocationVC {
         }
     }
     
-    // Timer Notification
-    let TIMER_IS_ON_UPDATED = Notification.Name("timerIsOnUpdated")
-    let START_TIME_UPDATED = Notification.Name("startTimeUpdated")
-    let TOTAL_TIME_UPDATED = Notification.Name("totalTimeUpdated")
 
-    // Location variables
+    // MARK: - Variables and Propeties - Map
+    var coordinates = [CLLocationCoordinate2D]()
     var startLocation: CLLocation!
     var lastLocation: CLLocation!
-    var runDistance: Double = 0.0
     
+    var runDistance: Double = 0.0
     var runCurrentPace = 0
     var runCurrentSpeed = 0.0
     var runAvePace = 0
     var runAveSpeed = 0.0
 
-    // CoreData - Location properties
-    var coodinateLocations = [Location]()
     
-    // Location Log variables
+    // MARK: - Variables and Propeties - Location Log
     var logTimestamp: NSDate?
     var logAccuracy: Double = 0.0
     var logSpeed: Double = 0.0
     var logDirection: Double = 0.0
     var eachDistance: Double = 0.0
     
-    var coordinates = [CLLocationCoordinate2D]()
     
     // MARK: - IBOutlets
     @IBOutlet weak var mapView: MKMapView!
@@ -105,23 +105,27 @@ class CurrentRunVC: LocationVC {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Core Data
+        // MARK: - Core Data
         let app = UIApplication.shared
         let appDelegate = app.delegate as! AppDelegate
         self.context = appDelegate.context
         
+        guard let storeURL = context.persistentStoreCoordinator?.persistentStores.first?.url else { return }
+        print("Store url: \(String(describing: storeURL))")
+        
         // NSAsynchronousFetchRequest: Performing fetches in the background
+        // Async Location Fetch
         let locFetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
         self.locationFetchRequest = locFetchRequest
-        let runFetchRequest: NSFetchRequest<Run> = Run.fetchRequest()
-        self.runFetchRequest = runFetchRequest
-        
         self.asyncLocFetchRequest = NSAsynchronousFetchRequest(fetchRequest: locFetchRequest, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
             
             guard let locs = result.finalResult else { return }
-            self.locations = locs
+            self.coodinateLocations = locs
         })
         
+        // Async Run Fetch
+        let runFetchRequest: NSFetchRequest<Run> = Run.fetchRequest()
+        self.runFetchRequest = runFetchRequest
         self.asyncRunFetchRequest = NSAsynchronousFetchRequest(fetchRequest: runFetchRequest, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
             
             guard let runs = result.finalResult else { return }
@@ -139,14 +143,14 @@ class CurrentRunVC: LocationVC {
             print("Could not fetch \(error), \(error.userInfo)")
         }
 
-        // Core Location
+        // MARK: - Core Location
         checkLocationServices()
         
         mapView.delegate = self
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .none
         
-        // UIPanGesture Implementation
+        // MARK: - UIPanGesture
         let swipeGesture = UIPanGestureRecognizer(target: self, action: #selector(endRunSwiped(sender:)))
         sliderImageView.addGestureRecognizer(swipeGesture)
         sliderImageView.isUserInteractionEnabled = true
