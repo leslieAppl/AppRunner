@@ -164,6 +164,7 @@ class CurrentRunVC: LocationVC {
     
     // MARK: - Internal Methods
     func startRun() {
+        // Core Data
         locationManager.startUpdatingLocation()
         startTimer()
         
@@ -175,9 +176,10 @@ class CurrentRunVC: LocationVC {
         stopTImer()
         
         // Core Data
-//        let location = Location(context: context)
-//        location.latitude =
         let run = Run(context: context)
+//        run.id = UUID().uuidString
+//        run.date = Date()
+        
         run.avePace = Int16(runAvePace)
         run.aveSpeed = runAveSpeed
         run.duration = Int16(counter)
@@ -191,50 +193,10 @@ class CurrentRunVC: LocationVC {
     
     func pauseRun() {
         startLocation = nil
-
         locationManager.stopUpdatingLocation()
         pauseTimer()
         
         pauseBtn.setImage(UIImage(named: "resumeButton"), for: .normal)
-    }
-    
-    func calculateCurrentPace(speed: Double) -> Int{
-        if speed > 0 {
-            return (3600 / speed).toInt()!
-        } else {
-            return 0
-        }
-    }
-    
-    func calculateAvePace(time second: Int, m: Double) -> String {
-        if second > 0 && m > 0.00 {
-            runAvePace = ((Double(second) / m) * 1000).toInt()!
-        } else {
-            runAvePace = 0
-        }
-        return runAvePace.formatTimeDurationToString()
-    }
-    
-    func calculateAveSpeed(time second: Int, m: Double) -> String {
-        if second > 0 && m > 0.00 {
-            runAveSpeed = (m / Double(second)) * 3600
-        } else {
-            runAveSpeed = 0.0
-        }
-        return runAveSpeed.metersToKmForString(places: 2)
-    }
-    
-    func addCurrentRunToMap(from lastLocation: CLLocation) -> MKPolyline? {
-
-        self.coordinates.append(lastLocation.coordinate)
-        
-        mapView.setRegion(centerCurrentRoute(from: lastLocation), animated: true)
-        return MKPolyline(coordinates: &coordinates, count: coordinates.count)
-    }
-
-    func centerCurrentRoute(from lastLocation: CLLocation) -> MKCoordinateRegion {
-        
-        return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: lastLocation.coordinate.latitude, longitude: lastLocation.coordinate.longitude), span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
     }
     
     // MARK: - Timer Model
@@ -275,16 +237,7 @@ class CurrentRunVC: LocationVC {
             totalTime = 0
         }
     }
-    
-    func resetTimer() {
         
-        timerIsOn = false
-        
-        timer.invalidate()
-        totalTime = 0.0
-        convertTimeInteral(interval: totalTime)
-    }
-    
     @objc func tickTock() {
         
         let displayTime = Date().timeIntervalSince(startTime) + totalTime
@@ -311,6 +264,48 @@ class CurrentRunVC: LocationVC {
         durrationLbl.font = UIFont.monospacedDigitSystemFont(ofSize: 40, weight: .bold)
     }
     
+    // MARK: - Map Methods
+    func addCurrentRunToMap(from lastLocation: CLLocation) -> MKPolyline? {
+
+        self.coordinates.append(lastLocation.coordinate)
+        
+        mapView.setRegion(centerCurrentRoute(from: lastLocation), animated: true)
+        return MKPolyline(coordinates: &coordinates, count: coordinates.count)
+    }
+
+    func centerCurrentRoute(from lastLocation: CLLocation) -> MKCoordinateRegion {
+        
+        return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: lastLocation.coordinate.latitude, longitude: lastLocation.coordinate.longitude), span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005))
+    }
+    
+    // MARK: - Helper Methods
+    func calculateCurrentPace(speed: Double) -> Int{
+        if speed > 0 {
+            return (3600 / speed).toInt()!
+        } else {
+            return 0
+        }
+    }
+    
+    func calculateAvePace(time second: Int, m: Double) -> String {
+        if second > 0 && m > 0.00 {
+            runAvePace = ((Double(second) / m) * 1000).toInt()!
+        } else {
+            runAvePace = 0
+        }
+        return runAvePace.formatTimeDurationToString()
+    }
+    
+    func calculateAveSpeed(time second: Int, m: Double) -> String {
+        if second > 0 && m > 0.00 {
+            runAveSpeed = (m / Double(second)) * 3600
+        } else {
+            runAveSpeed = 0.0
+        }
+        return runAveSpeed.metersToKmForString(places: 2)
+    }
+    
+
     // MARK: - IBActions
     @IBAction func pauseBtnPressed(_ sender: Any) {
         
@@ -401,7 +396,8 @@ extension CurrentRunVC {
                 let newLocation = Location(context: context)
                 newLocation.latitude = Double(lastLocation.coordinate.latitude)
                 newLocation.longitude = Double(lastLocation.coordinate.longitude)
-                
+//                newLocation.run =
+                    
                 coreDataStack.saveContext()
                 self.locations.insert(newLocation, at: 0)
                 
@@ -436,7 +432,8 @@ extension CurrentRunVC {
                 aveSpeedLbl.font = UIFont.monospacedDigitSystemFont(ofSize: 30, weight: .bold)
             }
             
-            lastLocation = locations.last   // important!! don't miss the first "lastLocation" initializing.
+            // important!! don't miss the first "lastLocation" initializing.
+            lastLocation = locations.last
 
         }
     }
