@@ -108,34 +108,6 @@ class CurrentRunVC: LocationVC {
         self.coreDataStack = appDelegate
         self.context = coreDataStack.context
                 
-        // NSAsynchronousFetchRequest: Performing fetches in the background
-        let lfr: NSFetchRequest<Location> = Location.fetchRequest()
-        self.locFetchRequest = lfr
-        self.asyncLocFetchRequest = NSAsynchronousFetchRequest(fetchRequest: lfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
-            
-            guard let locs = result.finalResult else { return }
-            self.locations = locs
-        })
-        
-        let rfr: NSFetchRequest<Run> = Run.fetchRequest()
-        self.runFetchRequest = rfr
-        self.asyncRunFetchRequest = NSAsynchronousFetchRequest(fetchRequest: rfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
-            
-            guard let runs = result.finalResult else { return }
-            self.runs = runs
-        })
-        
-        do {
-            guard let alfr = self.asyncLocFetchRequest,
-                  let arfr = self.asyncRunFetchRequest else { return }
-            
-            try context.execute(alfr)
-            try context.execute(arfr)
-            
-        } catch let error as NSError {
-            print("Could not fetch \(error), \(error.userInfo)")
-        }
-
         // MARK: - Core Location
         checkLocationServices()
         
@@ -164,10 +136,13 @@ class CurrentRunVC: LocationVC {
     
     // MARK: - Internal Methods
     func startRun() {
-        // Core Data
+        // Core Location
         locationManager.startUpdatingLocation()
+        
+        // Timer
         startTimer()
         
+        // UI
         pauseBtn.setImage(UIImage(named: "pauseButton"), for: .normal)
     }
     
@@ -177,18 +152,20 @@ class CurrentRunVC: LocationVC {
         
         // Core Data
         let run = Run(context: context)
-//        run.id = UUID().uuidString
-//        run.date = Date()
+        run.id = UUID().uuidString
+        run.date = Date()
         
         run.avePace = Int16(runAvePace)
         run.aveSpeed = runAveSpeed
         run.duration = Int16(counter)
         run.distance = runDistance
+        
         for location in locations {
             run.addToLocations(location)
         }
         
         coreDataStack.saveContext()
+        
     }
     
     func pauseRun() {
@@ -393,12 +370,13 @@ extension CurrentRunVC {
                 runDistance += lastLocation.distance(from: location)
                 
                 // Core Data
+                /// 1 Init Managed Object into an instance
                 let newLocation = Location(context: context)
                 newLocation.latitude = Double(lastLocation.coordinate.latitude)
                 newLocation.longitude = Double(lastLocation.coordinate.longitude)
-//                newLocation.run =
-                    
                 coreDataStack.saveContext()
+                
+                /// 2 Insert new objects into core data Location Array, so they can ordered in decrease.
                 self.locations.insert(newLocation, at: 0)
                 
                 // Adding Polyline
@@ -450,4 +428,52 @@ extension CurrentRunVC: MKMapViewDelegate {
         return renderer
     }
 
+}
+
+// MARK: - Core Data Helper
+extension CurrentRunVC {
+    
+    func asyncLFR() {
+        
+        // NSAsynchronousFetchRequest: Performing fetches in the background
+        let lfr: NSFetchRequest<Location> = Location.fetchRequest()
+        self.locFetchRequest = lfr
+        self.asyncLocFetchRequest = NSAsynchronousFetchRequest(fetchRequest: lfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
+            
+            guard let locs = result.finalResult else { return }
+            self.locations = locs
+        })
+                
+        do {
+            guard let alfr = self.asyncLocFetchRequest else { return }
+            
+            try context.execute(alfr)
+            
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
+
+    }
+    
+    func asyncRFR() {
+        
+        // NSAsynchronousFetchRequest: Performing fetches in the background
+        let rfr: NSFetchRequest<Run> = Run.fetchRequest()
+        self.runFetchRequest = rfr
+        self.asyncRunFetchRequest = NSAsynchronousFetchRequest(fetchRequest: rfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
+            
+            guard let runs = result.finalResult else { return }
+            self.runs = runs
+        })
+        
+        do {
+            guard let arfr = self.asyncRunFetchRequest else { return }
+            
+            try context.execute(arfr)
+            
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
+
+    }
 }

@@ -56,38 +56,14 @@ class BeginRunVC: LocationVC {
         self.coreDataStack = appDelegate
         self.context = coreDataStack.context
         
-        // Print simulater sotre url.
+        /// Print simulater sotre url.
         guard let storeURL = context.persistentStoreCoordinator?.persistentStores.first?.url else { return }
         print("Simulator store url: \(String(describing: storeURL))")
         
-        // NSAsynchronousFetchRequest: Performing fetches in the background
-        let lfr: NSFetchRequest<Location> = Location.fetchRequest()
-        self.locFetchRequest = lfr
-        self.asyncLocFetchRequest = NSAsynchronousFetchRequest(fetchRequest: lfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
-            
-            guard let locs = result.finalResult else { return }
-            self.locations = locs
-        })
+        /// NSAsynchronousFetchRequest: Performing fetches in the background
+        asyncRFR()
+        asyncLFR()
         
-        let rfr: NSFetchRequest<Run> = Run.fetchRequest()
-        self.runFetchRequest = rfr
-        self.asyncRunFetchRequest = NSAsynchronousFetchRequest(fetchRequest: rfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
-            
-            guard let runs = result.finalResult else { return }
-            self.runs = runs
-        })
-        
-        do {
-            guard let alfr = self.asyncLocFetchRequest,
-                  let arfr = self.asyncRunFetchRequest else { return }
-            
-            try context.execute(alfr)
-            try context.execute(arfr)
-            
-        } catch let error as NSError {
-            print("Could not fetch \(error), \(error.userInfo)")
-        }
-
         // MARK: - Core Location
         checkLocationServices()
         
@@ -95,6 +71,9 @@ class BeginRunVC: LocationVC {
         mapView.delegate = self
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .none
+        
+//        setupMapView()
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -145,7 +124,7 @@ class BeginRunVC: LocationVC {
         // TODO: - Get last run from core data
         fetchLastRun()
         guard let lastRun = self.lastRun else { return nil }
-        
+
         lastRunDateLbl.text = lastRun.date?.formatDateToString()
         lastRunPaceLbl.text = Int(lastRun.avePace).formatTimeDurationToString()
         lastRunSpeedLbl.text = lastRun.aveSpeed.metersToKmForString(places: 2)
@@ -158,6 +137,8 @@ class BeginRunVC: LocationVC {
             
             for location in locs {
                 let loc = location as! Location
+                
+                print(">>> loc: \(loc.latitude)")
                 coordinates.append(CLLocationCoordinate2D(latitude: loc.latitude, longitude: loc.longitude))
             }
             
@@ -216,5 +197,53 @@ extension BeginRunVC: MKMapViewDelegate {
         renderer.strokeColor = #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1)
         renderer.lineWidth = 3
         return renderer
+    }
+}
+
+// MARK: - Core Data Helper
+extension BeginRunVC {
+    
+    func asyncLFR() {
+        
+        // NSAsynchronousFetchRequest: Performing fetches in the background
+        let lfr: NSFetchRequest<Location> = Location.fetchRequest()
+        self.locFetchRequest = lfr
+        self.asyncLocFetchRequest = NSAsynchronousFetchRequest(fetchRequest: lfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
+            
+            guard let locs = result.finalResult else { return }
+            self.locations = locs
+        })
+                
+        do {
+            guard let alfr = self.asyncLocFetchRequest else { return }
+            
+            try context.execute(alfr)
+            
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
+
+    }
+    
+    func asyncRFR() {
+        
+        // NSAsynchronousFetchRequest: Performing fetches in the background
+        let rfr: NSFetchRequest<Run> = Run.fetchRequest()
+        self.runFetchRequest = rfr
+        self.asyncRunFetchRequest = NSAsynchronousFetchRequest(fetchRequest: rfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
+            
+            guard let runs = result.finalResult else { return }
+            self.runs = runs
+        })
+        
+        do {
+            guard let arfr = self.asyncRunFetchRequest else { return }
+            
+            try context.execute(arfr)
+            
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
+
     }
 }
