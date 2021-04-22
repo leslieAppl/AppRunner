@@ -117,7 +117,6 @@ class BeginRunVC: LocationVC {
         guard let lastRL = self.lastRunLocations else { return }
         for l in lastRL {
             
-            print("!! last run location: \(l.latitude)")
         }
         
     }

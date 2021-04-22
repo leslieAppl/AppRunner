@@ -29,7 +29,8 @@ class CurrentRunVC: LocationVC {
     
     var runs: [Run] = []
     var locations: [Location] = []
-
+    var locCounter = 0
+    
     // MARK: - Variables and Propeties - Timer
     var timer = Timer()
     var counter = 0
@@ -101,7 +102,6 @@ class CurrentRunVC: LocationVC {
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
         
         // MARK: - Core Data
         let app = UIApplication.shared
@@ -126,7 +126,11 @@ class CurrentRunVC: LocationVC {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        print("$$ View Will Appear")
         
+        self.locations = []
+        self.locCounter = 0
+
         restoreTimerStatus()
         startRun()
     }
@@ -368,6 +372,9 @@ extension CurrentRunVC {
             let newLocation = Location(context: context)
             newLocation.latitude = Double(lastLoc.coordinate.latitude)
             newLocation.longitude = Double(lastLoc.coordinate.longitude)
+            newLocation.int = Int16(locCounter)
+            
+            locCounter += 1
             self.locations.append(newLocation)
 
             // Polyline

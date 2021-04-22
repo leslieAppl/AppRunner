@@ -2,7 +2,7 @@
 //  Location+CoreDataProperties.swift
 //  AppRunner
 //
-//  Created by leslie on 4/8/21.
+//  Created by leslie on 4/22/21.
 //
 //
 
@@ -18,6 +18,7 @@ extension Location {
 
     @NSManaged public var latitude: Double
     @NSManaged public var longitude: Double
+    @NSManaged public var int: Int16
     @NSManaged public var run: Run?
 
 }
