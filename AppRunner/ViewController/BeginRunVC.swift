@@ -27,15 +27,16 @@ class BeginRunVC: LocationVC {
     
     var locations: [Location] = []
     var runs: [Run] = []
-    
     var lastRun: Run?
-    var lastRunLocations: [Location]?
     
     // NSSortDescriptor
     lazy var dateSortDescriptor: NSSortDescriptor = {
         return NSSortDescriptor(key: #keyPath(Run.date), ascending: true)
     }()
     
+    // MARK: - Variables and Propeties - Map & Run
+//    var coordinates = [CLLocationCoordinate2D]()
+
     // MARK: - IBOutlet
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var lastRunBGView: UIView!
@@ -49,6 +50,7 @@ class BeginRunVC: LocationVC {
     // MARK: - View Controller
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(#function)
         
         // MARK: - Core Data
         let app = UIApplication.shared
@@ -72,21 +74,21 @@ class BeginRunVC: LocationVC {
         mapView.delegate = self
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .none
-        
-//        setupMapView()
-        
+                
         // Test
-        fetchLastRunLocations()
+
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        print(#function)
         
         setupMapView()
     }
     
     // MARK: - Internal Methods - Core Data
     func fetchLastRun() {
+        print(#function)
         
         guard let runFetch = self.runFetchRequest else { return }
         runFetch.sortDescriptors = [self.dateSortDescriptor]
@@ -100,29 +102,10 @@ class BeginRunVC: LocationVC {
             print("Could not fetch \(error), \(error.userInfo)")
         }
     }
-    
-    func fetchLastRunLocations() {
         
-        fetchLastRun()
-        guard let lr = self.lastRun else { return }
-        guard let locs = lr.locations else { return }
-        
-        for loc in locs {
-            
-            let l = loc as! Location
-            self.lastRunLocations = [Location]()
-            self.lastRunLocations?.append(l)
-        }
-        
-        guard let lastRL = self.lastRunLocations else { return }
-        for l in lastRL {
-            
-        }
-        
-    }
-    
-    // Map View Methods
+    // MARK: - Map View Methods
     func setupMapView() {
+        print(#function)
         
         if let polyline = addLastRunToMap() {
             
@@ -141,38 +124,43 @@ class BeginRunVC: LocationVC {
             centerMapOnUserLocation()
         }
     }
-    
+
     func addLastRunToMap() -> MKPolyline? {
+        print(#function)
         
         // TODO: - Get last run from core data
         fetchLastRun()
+        
         guard let lastRun = self.lastRun else { return nil }
 
+        // Begin Run UI
         lastRunDateLbl.text = lastRun.date?.formatDateToString()
         lastRunPaceLbl.text = Int(lastRun.avePace).formatTimeDurationToString()
         lastRunSpeedLbl.text = lastRun.aveSpeed.metersToKmForString(places: 2)
         lastRunDurationLbl.text = Int(lastRun.duration).formatTimeDurationToString()
         lastRunDistanceLbl.text = lastRun.distance.metersToKmForString(places: 2)
         
+        // Polyline
         var coordinates = [CLLocationCoordinate2D]()
-        
         if let locs = lastRun.locations {
             
             for location in locs {
                 let loc = location as! Location
                 
-                print(">>> loc: \(loc.latitude)")
+                // MARK: - TODO: Drawing Polyline
                 coordinates.append(CLLocationCoordinate2D(latitude: loc.latitude, longitude: loc.longitude))
+
             }
             
             mapView.userTrackingMode = .none
             mapView.setRegion(centerMapOnPrevRoute(locations: locs), animated: true)
         }
         
-        return MKPolyline(coordinates: &coordinates, count: 0)
+        return MKPolyline(coordinates: &coordinates, count: coordinates.count)
     }
     
     func centerMapOnUserLocation() {
+        print(#function)
         
         mapView.userTrackingMode = .follow
         let coordinateRegion = MKCoordinateRegion(center: mapView.userLocation.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
@@ -180,30 +168,8 @@ class BeginRunVC: LocationVC {
     }
     
     func centerMapOnPrevRoute(locations: NSOrderedSet) -> MKCoordinateRegion {
-        // First location element is the most current location in NSOrderedSet.
-        fetchLastRun()
-        fetchLastRunLocations()
+        print(#function)
         
-        guard let initialLoc = locations.firstObject as? Location else { return MKCoordinateRegion() }
-        
-        var minLat = initialLoc.latitude
-        var minLng = initialLoc.longitude
-        var maxLat = minLat
-        var maxLng = minLng
-        
-        for location in locations {
-            let loc = location as! Location
-            minLat = min(minLat, loc.latitude)
-            minLng = min(minLng, loc.longitude)
-            maxLat = max(maxLat, loc.latitude)
-            maxLng = max(maxLng, loc.longitude)
-        }
-        
-        return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: (minLat+maxLat)/2, longitude: (minLng+maxLng)/2), span: MKCoordinateSpan(latitudeDelta: (maxLat-minLat)*1.4, longitudeDelta: (maxLng-minLng)*1.4))
-    }
-
-    func centerMapOnPrevRoute2(locations: NSOrderedSet) -> MKCoordinateRegion {
-        // First location element is the most current location in NSOrderedSet.
         guard let initialLoc = locations.firstObject as? Location else { return MKCoordinateRegion() }
         
         var minLat = initialLoc.latitude
