@@ -29,7 +29,8 @@ class BeginRunVC: LocationVC {
     var runs: [Run] = []
     
     var lastRun: Run?
-        
+    var lastRunLocations: [Location]?
+    
     // NSSortDescriptor
     lazy var dateSortDescriptor: NSSortDescriptor = {
         return NSSortDescriptor(key: #keyPath(Run.date), ascending: true)
@@ -62,7 +63,7 @@ class BeginRunVC: LocationVC {
         
         /// NSAsynchronousFetchRequest: Performing fetches in the background
         asyncRFR()
-        asyncLFR()
+//        asyncLFR()
         
         // MARK: - Core Location
         checkLocationServices()
@@ -74,6 +75,8 @@ class BeginRunVC: LocationVC {
         
 //        setupMapView()
         
+        // Test
+        fetchLastRunLocations()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -96,6 +99,27 @@ class BeginRunVC: LocationVC {
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
         }
+    }
+    
+    func fetchLastRunLocations() {
+        
+        fetchLastRun()
+        guard let lr = self.lastRun else { return }
+        guard let locs = lr.locations else { return }
+        
+        for loc in locs {
+            
+            let l = loc as! Location
+            self.lastRunLocations = [Location]()
+            self.lastRunLocations?.append(l)
+        }
+        
+        guard let lastRL = self.lastRunLocations else { return }
+        for l in lastRL {
+            
+            print("!! last run location: \(l.latitude)")
+        }
+        
     }
     
     // Map View Methods
@@ -158,6 +182,29 @@ class BeginRunVC: LocationVC {
     
     func centerMapOnPrevRoute(locations: NSOrderedSet) -> MKCoordinateRegion {
         // First location element is the most current location in NSOrderedSet.
+        fetchLastRun()
+        fetchLastRunLocations()
+        
+        guard let initialLoc = locations.firstObject as? Location else { return MKCoordinateRegion() }
+        
+        var minLat = initialLoc.latitude
+        var minLng = initialLoc.longitude
+        var maxLat = minLat
+        var maxLng = minLng
+        
+        for location in locations {
+            let loc = location as! Location
+            minLat = min(minLat, loc.latitude)
+            minLng = min(minLng, loc.longitude)
+            maxLat = max(maxLat, loc.latitude)
+            maxLng = max(maxLng, loc.longitude)
+        }
+        
+        return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: (minLat+maxLat)/2, longitude: (minLng+maxLng)/2), span: MKCoordinateSpan(latitudeDelta: (maxLat-minLat)*1.4, longitudeDelta: (maxLng-minLng)*1.4))
+    }
+
+    func centerMapOnPrevRoute2(locations: NSOrderedSet) -> MKCoordinateRegion {
+        // First location element is the most current location in NSOrderedSet.
         guard let initialLoc = locations.firstObject as? Location else { return MKCoordinateRegion() }
         
         var minLat = initialLoc.latitude
@@ -203,28 +250,6 @@ extension BeginRunVC: MKMapViewDelegate {
 // MARK: - Core Data Helper
 extension BeginRunVC {
     
-    func asyncLFR() {
-        
-        // NSAsynchronousFetchRequest: Performing fetches in the background
-        let lfr: NSFetchRequest<Location> = Location.fetchRequest()
-        self.locFetchRequest = lfr
-        self.asyncLocFetchRequest = NSAsynchronousFetchRequest(fetchRequest: lfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
-            
-            guard let locs = result.finalResult else { return }
-            self.locations = locs
-        })
-                
-        do {
-            guard let alfr = self.asyncLocFetchRequest else { return }
-            
-            try context.execute(alfr)
-            
-        } catch let error as NSError {
-            print("Could not fetch \(error), \(error.userInfo)")
-        }
-
-    }
-    
     func asyncRFR() {
         
         // NSAsynchronousFetchRequest: Performing fetches in the background
@@ -244,6 +269,26 @@ extension BeginRunVC {
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
         }
+    }
 
+    func asyncLFR() {
+        
+        // NSAsynchronousFetchRequest: Performing fetches in the background
+        let lfr: NSFetchRequest<Location> = Location.fetchRequest()
+        self.locFetchRequest = lfr
+        self.asyncLocFetchRequest = NSAsynchronousFetchRequest(fetchRequest: lfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
+            
+            guard let locs = result.finalResult else { return }
+            self.locations = locs
+        })
+                
+        do {
+            guard let alfr = self.asyncLocFetchRequest else { return }
+            
+            try context.execute(alfr)
+            
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
     }
 }

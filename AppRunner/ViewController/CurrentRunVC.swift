@@ -66,7 +66,8 @@ class CurrentRunVC: LocationVC {
     var coordinates = [CLLocationCoordinate2D]()
     var startLocation: CLLocation!
     var lastLocation: CLLocation!
-    
+//    var locationCache = [CLLocation]()
+//    var locationCache = []
     var runDistance: Double = 0.0
     var runCurrentPace = 0
     var runCurrentSpeed = 0.0
@@ -101,6 +102,7 @@ class CurrentRunVC: LocationVC {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        
         // MARK: - Core Data
         let app = UIApplication.shared
         guard let appDelegate = app.delegate as? AppDelegate else { return }
@@ -160,12 +162,15 @@ class CurrentRunVC: LocationVC {
         run.duration = Int16(counter)
         run.distance = runDistance
         
-        for location in locations {
-            run.addToLocations(location)
+        for loc in locations {
+            print("$$$: \(loc.latitude), \(loc.longitude)")
+//            run.addToLocations(locations as NSOrderedSet)
+            run.addToLocations(loc)
         }
-        
+
         coreDataStack.saveContext()
         
+        // Test
     }
     
     func pauseRun() {
@@ -350,35 +355,32 @@ extension CurrentRunVC {
         self.logAccuracy = locations.last!.horizontalAccuracy // Meters
         self.logSpeed = ((locations.last!.speed * 3600) / 1000).setDecimalPlaces(places: 2) // Meters Per Second
         self.logDirection = locations.last!.course // Degrees and relative to due north
-        
-//        print(">>time: \(String(describing: self.logTimestamp))")
-//        print(">>logAccuracy: \(self.logAccuracy)")
-//        print(">>logSpeed: \(self.logSpeed)")
-//        print(">>logDirection: \(self.logDirection)")
-//        print()
-        
+                
         if locations.last?.speed.isLess(than: 0) ?? true {
             
         }
         else {
             
+            // Core Data caching
+            guard let lastLoc = locations.last else {
+                return
+            }
+            let newLocation = Location(context: context)
+            newLocation.latitude = Double(lastLoc.coordinate.latitude)
+            newLocation.longitude = Double(lastLoc.coordinate.longitude)
+            self.locations.append(newLocation)
+
+            // Polyline
             if startLocation == nil {
                 startLocation = locations.first
+//                print("$$$ start location: \(String(describing: startLocation))")
+
             }
             else if let location = locations.last {
+//                print("$$$ location: \(location)")
                 eachDistance = lastLocation.distance(from: location)
                 runDistance += lastLocation.distance(from: location)
-                
-                // Core Data
-                /// 1 Init Managed Object into an instance
-                let newLocation = Location(context: context)
-                newLocation.latitude = Double(lastLocation.coordinate.latitude)
-                newLocation.longitude = Double(lastLocation.coordinate.longitude)
-                coreDataStack.saveContext()
-                
-                /// 2 Insert new objects into core data Location Array, so they can ordered in decrease.
-                self.locations.insert(newLocation, at: 0)
-                
+                                
                 // Adding Polyline
                 if let polyline = addCurrentRunToMap(from: lastLocation) {
                     
@@ -412,7 +414,6 @@ extension CurrentRunVC {
             
             // important!! don't miss the first "lastLocation" initializing.
             lastLocation = locations.last
-
         }
     }
 }
@@ -433,28 +434,6 @@ extension CurrentRunVC: MKMapViewDelegate {
 // MARK: - Core Data Helper
 extension CurrentRunVC {
     
-    func asyncLFR() {
-        
-        // NSAsynchronousFetchRequest: Performing fetches in the background
-        let lfr: NSFetchRequest<Location> = Location.fetchRequest()
-        self.locFetchRequest = lfr
-        self.asyncLocFetchRequest = NSAsynchronousFetchRequest(fetchRequest: lfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
-            
-            guard let locs = result.finalResult else { return }
-            self.locations = locs
-        })
-                
-        do {
-            guard let alfr = self.asyncLocFetchRequest else { return }
-            
-            try context.execute(alfr)
-            
-        } catch let error as NSError {
-            print("Could not fetch \(error), \(error.userInfo)")
-        }
-
-    }
-    
     func asyncRFR() {
         
         // NSAsynchronousFetchRequest: Performing fetches in the background
@@ -470,6 +449,28 @@ extension CurrentRunVC {
             guard let arfr = self.asyncRunFetchRequest else { return }
             
             try context.execute(arfr)
+            
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
+
+    }
+
+    func asyncLFR() {
+        
+        // NSAsynchronousFetchRequest: Performing fetches in the background
+        let lfr: NSFetchRequest<Location> = Location.fetchRequest()
+        self.locFetchRequest = lfr
+        self.asyncLocFetchRequest = NSAsynchronousFetchRequest(fetchRequest: lfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
+            
+            guard let locs = result.finalResult else { return }
+            self.locations = locs
+        })
+                
+        do {
+            guard let alfr = self.asyncLocFetchRequest else { return }
+            
+            try context.execute(alfr)
             
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
