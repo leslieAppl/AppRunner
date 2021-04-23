@@ -29,7 +29,7 @@ class BeginRunVC: LocationVC {
     var runs: [Run] = []
     var lastRun: Run?
     
-    // NSSortDescriptor
+    /// NSSortDescriptor
     lazy var dateSortDescriptor: NSSortDescriptor = {
         return NSSortDescriptor(key: #keyPath(Run.date), ascending: true)
     }()
@@ -103,7 +103,7 @@ class BeginRunVC: LocationVC {
         }
     }
         
-    // MARK: - Map View Methods
+    // MARK: - Internal Methods - Map View Methods
     func setupMapView() {
         print(#function)
         
@@ -215,9 +215,10 @@ extension BeginRunVC: MKMapViewDelegate {
 // MARK: - Core Data Helper
 extension BeginRunVC {
     
+    // MARK: - NSAsynchronousFetchRequest
     func asyncRFR() {
         
-        // NSAsynchronousFetchRequest: Performing fetches in the background
+        /// NSAsynchronousFetchRequest: Performing fetches in the background
         let rfr: NSFetchRequest<Run> = Run.fetchRequest()
         self.runFetchRequest = rfr
         self.asyncRunFetchRequest = NSAsynchronousFetchRequest(fetchRequest: rfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
@@ -238,7 +239,7 @@ extension BeginRunVC {
 
     func asyncLFR() {
         
-        // NSAsynchronousFetchRequest: Performing fetches in the background
+        /// NSAsynchronousFetchRequest: Performing fetches in the background
         let lfr: NSFetchRequest<Location> = Location.fetchRequest()
         self.locFetchRequest = lfr
         self.asyncLocFetchRequest = NSAsynchronousFetchRequest(fetchRequest: lfr, completionBlock: {[unowned self] (result: NSAsynchronousFetchResult) in
