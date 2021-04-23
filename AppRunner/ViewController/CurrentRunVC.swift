@@ -291,7 +291,6 @@ class CurrentRunVC: LocationVC {
         return runAveSpeed.metersToKmForString(places: 2)
     }
     
-
     // MARK: - IBActions
     @IBAction func pauseBtnPressed(_ sender: Any) {
         

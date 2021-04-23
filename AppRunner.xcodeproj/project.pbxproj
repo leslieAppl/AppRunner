@@ -22,6 +22,7 @@
 		CE58B7BC25B8775900966760 /* Location+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58B7B825B8775900966760 /* Location+CoreDataClass.swift */; };
 		CE58B7BE25B8775900966760 /* Run+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE58B7BA25B8775900966760 /* Run+CoreDataClass.swift */; };
 		CE71DAF625CBEB0700772F9A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE71DAF525CBEB0700772F9A /* Extensions.swift */; };
+		CEA256AB2632CC8B006C63C4 /* RunLogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA256AA2632CC8B006C63C4 /* RunLogCell.swift */; };
 		CEEF59E526313CCC00C3B802 /* Run+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEF59E326313CCC00C3B802 /* Run+CoreDataProperties.swift */; };
 		CEEF59E626313CCC00C3B802 /* Location+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEF59E426313CCC00C3B802 /* Location+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
@@ -44,6 +45,7 @@
 		CE58B7B825B8775900966760 /* Location+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Location+CoreDataClass.swift"; sourceTree = "<group>"; };
 		CE58B7BA25B8775900966760 /* Run+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Run+CoreDataClass.swift"; sourceTree = "<group>"; };
 		CE71DAF525CBEB0700772F9A /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		CEA256AA2632CC8B006C63C4 /* RunLogCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RunLogCell.swift; sourceTree = "<group>"; };
 		CEEF59E326313CCC00C3B802 /* Run+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Run+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		CEEF59E426313CCC00C3B802 /* Location+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Location+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -80,6 +82,7 @@
 		CE498F8D25B28F7700A8E76A /* AppRunner */ = {
 			isa = PBXGroup;
 			children = (
+				CEA256A92632CC55006C63C4 /* View */,
 				CE58B7C125B8778E00966760 /* NSManagedObject */,
 				CE58B78025B2958B00966760 /* ViewController */,
 				CE71DAF325CBE9D500772F9A /* Extensions */,
@@ -131,6 +134,14 @@
 				CE71DAF525CBEB0700772F9A /* Extensions.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		CEA256A92632CC55006C63C4 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				CEA256AA2632CC8B006C63C4 /* RunLogCell.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -215,6 +226,7 @@
 				CE58B78725B298BC00966760 /* CurrentRunVC.swift in Sources */,
 				CE498F9125B28F7700A8E76A /* SceneDelegate.swift in Sources */,
 				CE58B7BE25B8775900966760 /* Run+CoreDataClass.swift in Sources */,
+				CEA256AB2632CC8B006C63C4 /* RunLogCell.swift in Sources */,
 				CEEF59E626313CCC00C3B802 /* Location+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

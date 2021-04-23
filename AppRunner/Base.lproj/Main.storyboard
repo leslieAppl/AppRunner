@@ -509,43 +509,43 @@
                                 <rect key="frame" x="0.0" y="77" width="375" height="541"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="RunLogCell" rowHeight="125" id="hbp-CL-fkX" customClass="RunLogCell" customModule="AppRunner" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" alpha="0.69999998807907104" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="RunLogCell" rowHeight="125" id="xYw-G7-bgS" customClass="RunLogCell" customModule="Tread" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="125"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="hbp-CL-fkX" id="7Cj-0I-kej">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="xYw-G7-bgS" id="bAx-ib-RyQ">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="125"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="1ot-6i-gdt">
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="PBR-QQ-AEX">
                                                     <rect key="frame" x="16" y="11" width="247.5" height="101.5"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12/15/2019 13:30" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v3Z-1J-0oq">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12/15/2019 13:30" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xDK-CS-OM8">
                                                             <rect key="frame" x="0.0" y="0.0" width="140.5" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hGx-UU-f4V">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FsR-0Q-R0b">
                                                             <rect key="frame" x="0.0" y="20.5" width="78" height="20"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="15.0 km" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vPz-9P-Gl2">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="15.0 km" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Spt-43-3VK">
                                                             <rect key="frame" x="0.0" y="40.5" width="64" height="20.5"/>
                                                             <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Average Pace: 05:00 min/km" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GMz-E0-UGe">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Average Pace: 05:00 min/km" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hQX-le-kyi">
                                                             <rect key="frame" x="0.0" y="61" width="234.5" height="20.5"/>
                                                             <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Average Speed: 11.60 km/hour" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B05-Kx-Zaj">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Average Speed: 11.60 km/hour" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="btn-IE-xAq">
                                                             <rect key="frame" x="0.0" y="81.5" width="247.5" height="20"/>
                                                             <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
@@ -556,18 +556,18 @@
                                                 </stackView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="1ot-6i-gdt" firstAttribute="leading" secondItem="7Cj-0I-kej" secondAttribute="leadingMargin" id="0ED-gd-0fj"/>
-                                                <constraint firstItem="1ot-6i-gdt" firstAttribute="top" secondItem="7Cj-0I-kej" secondAttribute="topMargin" id="AAb-P6-Y0I"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="1ot-6i-gdt" secondAttribute="bottom" constant="1.3300000000000001" id="JEY-j1-d7N"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="PBR-QQ-AEX" secondAttribute="bottom" constant="1.3300000000000001" id="8wJ-A6-zLU"/>
+                                                <constraint firstItem="PBR-QQ-AEX" firstAttribute="top" secondItem="bAx-ib-RyQ" secondAttribute="topMargin" id="FWX-wg-VVD"/>
+                                                <constraint firstItem="PBR-QQ-AEX" firstAttribute="leading" secondItem="bAx-ib-RyQ" secondAttribute="leadingMargin" id="tAC-r8-FbA"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
-                                            <outlet property="averagePaceLbl" destination="GMz-E0-UGe" id="UVz-mv-yzH"/>
-                                            <outlet property="averageSpeedLbl" destination="B05-Kx-Zaj" id="wmS-DY-N0K"/>
-                                            <outlet property="runDateLbl" destination="v3Z-1J-0oq" id="gad-zz-UzZ"/>
-                                            <outlet property="runDurationLbl" destination="hGx-UU-f4V" id="dyh-q0-QGv"/>
-                                            <outlet property="totalDistanceLbl" destination="vPz-9P-Gl2" id="qCE-UZ-2Gv"/>
+                                            <outlet property="averagePaceLbl" destination="hQX-le-kyi" id="wdl-GU-qR1"/>
+                                            <outlet property="averageSpeedLbl" destination="btn-IE-xAq" id="GHU-gL-PFL"/>
+                                            <outlet property="runDateLbl" destination="xDK-CS-OM8" id="7Vt-BO-XxP"/>
+                                            <outlet property="runDurationLbl" destination="FsR-0Q-R0b" id="Wxg-T8-7JJ"/>
+                                            <outlet property="totalDistanceLbl" destination="Spt-43-3VK" id="D9y-uM-6Ei"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
