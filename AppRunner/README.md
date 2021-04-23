@@ -17,5 +17,7 @@
     0423
     Fix RunLogVC
     
+    0424
+    Add delete log and delete all on RunLogVC
     
     
