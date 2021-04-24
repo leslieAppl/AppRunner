@@ -7,6 +7,22 @@
 
 import UIKit
 import MapKit
+import CoreData
+
+// MARK: - Variables and Propeties - Core Data
+//var coreDataStack: AppDelegate!
+//var context: NSManagedObjectContext!
+//
+//var locFetchRequest: NSFetchRequest<Location>?
+//var runFetchRequest: NSFetchRequest<Run>?
+//
+//var asyncLocFetchRequest: NSAsynchronousFetchRequest<Location>?
+//var asyncRunFetchRequest: NSAsynchronousFetchRequest<Run>?
+var test: Int = 0
+
+var locations: [Location] = []
+var runs: [Run] = []
+var selectedRun: Run?
 
 // MARK: - ShowRouteVC
 class ShowRouteVC: UIViewController {

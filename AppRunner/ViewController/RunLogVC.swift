@@ -72,14 +72,15 @@ class RunLogVC: LocationVC {
 
     }
 
-    // MARK: - Storyboard Segue
+    // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        if segue.identifier == "segueToShowRouteVC" {
-            let showRoutVC = segue.destination as! ShowRouteVC
-            // TODO: - 01
-//            showRoutVC.locations = locations
-        }
+        guard segue.identifier == "segueToShowRouteVC",
+              let showRoutVC = segue.destination as? ShowRouteVC else { return }
+        
+        print(">>>> segue: \(showRoutVC)")
+        
+        showRoutVC
     }
     
 }
@@ -91,7 +92,8 @@ extension RunLogVC: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print(">>>>\(#function)")
+        print(#function)
+        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "RunLogCell", for: indexPath) as? RunLogCell else { return UITableViewCell() }
         
         let run = runs[indexPath.row]
@@ -105,6 +107,13 @@ extension RunLogVC: UITableViewDataSource {
 // MARK: - Table View Delegate
 extension RunLogVC: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        guard let cell = tableView.cellForRow(at: indexPath) else { return }
+        
+        let selectedRun = runs[indexPath.row]
+        print(">>>> \(selectedRun.date)")
+    }
 }
 
 // MARK: - Core Data Helper

@@ -509,7 +509,7 @@
                                 <rect key="frame" x="0.0" y="77" width="375" height="541"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" alpha="0.69999998807907104" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="RunLogCell" rowHeight="125" id="xYw-G7-bgS" customClass="RunLogCell" customModule="Tread" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" alpha="0.69999998807907104" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="RunLogCell" rowHeight="125" id="xYw-G7-bgS" customClass="RunLogCell" customModule="AppRunner" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="125"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="xYw-G7-bgS" id="bAx-ib-RyQ">
@@ -568,6 +568,7 @@
                                             <outlet property="runDateLbl" destination="xDK-CS-OM8" id="7Vt-BO-XxP"/>
                                             <outlet property="runDurationLbl" destination="FsR-0Q-R0b" id="Wxg-T8-7JJ"/>
                                             <outlet property="totalDistanceLbl" destination="Spt-43-3VK" id="D9y-uM-6Ei"/>
+                                            <segue destination="CLW-VB-rNw" kind="show" identifier="segueToShowRouteVC" id="oRF-pu-RTU"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -591,7 +592,6 @@
                     <tabBarItem key="tabBarItem" title="LOG" image="tabbar-myLogIconGray" id="cPa-gy-q4n"/>
                     <connections>
                         <outlet property="tableView" destination="54A-TB-5CS" id="wae-mT-T0S"/>
-                        <segue destination="CLW-VB-rNw" kind="show" identifier="segueToShowRouteVC" id="3CP-zy-RfB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
