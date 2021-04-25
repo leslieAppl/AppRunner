@@ -1,7 +1,10 @@
 # RUN
 
 ## Core Data
-
+    Note:
+    Set relationship property's "Delete Rule" as "Cascade", 
+    so when deleted a Run Object, then its locations: [Location] relationship synchronously been deleted.
+    
 ## CLLocation
 
 ## MapKit
@@ -9,6 +12,7 @@
 ## UIPanGestureRecognizer
 
 ## Timer
+
 
 ## TODO:
     0421
@@ -21,7 +25,8 @@
     Fixed Polyline Implementation on ShowRouteVC
     
     0425
-    Add delete log and delete all on RunLogVC
+    Added delete log and delete all on RunLogVC
+    Set Core Data relationship property's "Delete Rule" as "Cascade"
     
     
     
