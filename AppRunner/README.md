@@ -18,6 +18,10 @@
     Fix RunLogVC
     
     0424
+    Fixed Polyline Implementation on ShowRouteVC
+    
+    0425
     Add delete log and delete all on RunLogVC
+    
     
     
