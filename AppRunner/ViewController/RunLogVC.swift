@@ -67,7 +67,6 @@ class RunLogVC: LocationVC {
         super.viewWillAppear(animated)
         
         asyncRFR()
-
     }
 
     // MARK: - Navigation
@@ -106,19 +105,31 @@ extension RunLogVC: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         print(#function)
-        print(">>> runs: \(self.runs.count)")
-        print(">>> index: \(indexPath.row)")
         
         guard editingStyle == .delete else { return }
+        
+        // Removing Core Data
         let runToRemove = runs[indexPath.row] as Run
         
         self.coreDataStack.context.delete(runToRemove)
         self.coreDataStack.saveContext()
         
-        asyncRFR()
+        // Updating runs: [Run]
+        let rfr: NSFetchRequest<Run> = Run.fetchRequest()
+        self.runFetchRequest = rfr
+        self.runFetchRequest?.sortDescriptors = [self.dateReversedSortDescriptor]
         
+        guard let runfetch = runFetchRequest else { return }
+        do {
+            runs = try self.coreDataStack.context.fetch(runfetch)
+            
+        } catch let error as NSError {
+            print("Couldn't fetch error: \(error), \(error.userInfo) ")
+        }
+        
+        // Removing Table View and reloading table view data
         tableView.deleteRows(at: [indexPath], with: .automatic)
-//        tableView.reloadData()
+
     }
 }
 
