@@ -22,7 +22,6 @@ import CoreData
 // MARK: - ShowRouteVC
 class ShowRouteVC: UIViewController {
 
-    // MARK: - Variables and Propeties - Core Data
     var locations: [Location] = []
     var selectedRun: Run?
 

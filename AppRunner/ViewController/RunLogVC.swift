@@ -42,10 +42,11 @@ class RunLogVC: LocationVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Table View
         tableView.delegate = self
         tableView.dataSource = self
         
-        // MARK: - Core Data
+        // Core Data
         let app = UIApplication.shared
         guard let appDelegate = app.delegate as? AppDelegate else { return }
         
@@ -60,9 +61,6 @@ class RunLogVC: LocationVC {
         asyncRFR()
 //        asyncLFR()
 
-        
-        // Table View
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -102,6 +100,26 @@ extension RunLogVC: UITableViewDataSource {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        print(#function)
+        print(">>> runs: \(self.runs.count)")
+        print(">>> index: \(indexPath.row)")
+        
+        guard editingStyle == .delete else { return }
+        let runToRemove = runs[indexPath.row] as Run
+        
+        self.coreDataStack.context.delete(runToRemove)
+        self.coreDataStack.saveContext()
+        
+        asyncRFR()
+        
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+//        tableView.reloadData()
+    }
 }
 
 // MARK: - Table View Delegate
