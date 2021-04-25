@@ -167,8 +167,6 @@ class CurrentRunVC: LocationVC {
         run.distance = runDistance
         
         for loc in locations {
-            print("$$$: \(loc.latitude), \(loc.longitude)")
-//            run.addToLocations(locations as NSOrderedSet)
             run.addToLocations(loc)
         }
 

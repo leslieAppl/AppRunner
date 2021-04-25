@@ -53,8 +53,8 @@ class RunLogVC: LocationVC {
         self.context = coreDataStack.context
         
         /// Print simulater sotre url.
-        guard let storeURL = context.persistentStoreCoordinator?.persistentStores.first?.url else { return }
-        print("Simulator store url: \(String(describing: storeURL))")
+//        guard let storeURL = context.persistentStoreCoordinator?.persistentStores.first?.url else { return }
+//        print("Simulator store url: \(String(describing: storeURL))")
         
         /// NSAsynchronousFetchRequest: Performing fetches in the background
         asyncRFR()
@@ -74,13 +74,14 @@ class RunLogVC: LocationVC {
 
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        print(#function)
         
         guard segue.identifier == "segueToShowRouteVC",
-              let showRoutVC = segue.destination as? ShowRouteVC else { return }
+              let showRoutVC = segue.destination as? ShowRouteVC
+        else { return }
         
-        print(">>>> segue: \(showRoutVC)")
+        showRoutVC.selectedRun = selectedRun
         
-        showRoutVC
     }
     
 }
@@ -92,7 +93,6 @@ extension RunLogVC: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print(#function)
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "RunLogCell", for: indexPath) as? RunLogCell else { return UITableViewCell() }
         
@@ -108,11 +108,13 @@ extension RunLogVC: UITableViewDataSource {
 extension RunLogVC: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(#function)
         
-        guard let cell = tableView.cellForRow(at: indexPath) else { return }
+//        guard let cell = tableView.cellForRow(at: indexPath) else { return }
         
-        let selectedRun = runs[indexPath.row]
-        print(">>>> \(selectedRun.date)")
+        self.selectedRun = runs[indexPath.row]
+        
+        performSegue(withIdentifier: "segueToShowRouteVC", sender: self)
     }
 }
 

@@ -204,6 +204,8 @@ class BeginRunVC: LocationVC {
 extension BeginRunVC: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        print(#function)
+        
         let polyline = overlay as! MKPolyline
         let renderer = MKPolylineRenderer(overlay: polyline)
         renderer.strokeColor = #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1)

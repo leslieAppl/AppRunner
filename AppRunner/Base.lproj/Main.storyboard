@@ -568,7 +568,6 @@
                                             <outlet property="runDateLbl" destination="xDK-CS-OM8" id="7Vt-BO-XxP"/>
                                             <outlet property="runDurationLbl" destination="FsR-0Q-R0b" id="Wxg-T8-7JJ"/>
                                             <outlet property="totalDistanceLbl" destination="Spt-43-3VK" id="D9y-uM-6Ei"/>
-                                            <segue destination="CLW-VB-rNw" kind="show" identifier="segueToShowRouteVC" id="oRF-pu-RTU"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -592,6 +591,7 @@
                     <tabBarItem key="tabBarItem" title="LOG" image="tabbar-myLogIconGray" id="cPa-gy-q4n"/>
                     <connections>
                         <outlet property="tableView" destination="54A-TB-5CS" id="wae-mT-T0S"/>
+                        <segue destination="CLW-VB-rNw" kind="show" identifier="segueToShowRouteVC" id="A3K-RX-Nue"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
