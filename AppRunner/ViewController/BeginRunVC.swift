@@ -135,10 +135,10 @@ class BeginRunVC: LocationVC {
 
         // Begin Run UI
         lastRunDateLbl.text = lastRun.date?.formatDateToString()
-        lastRunPaceLbl.text = Int(lastRun.avePace).formatTimeDurationToString()
-        lastRunSpeedLbl.text = lastRun.aveSpeed.metersToKmForString(places: 2)
-        lastRunDurationLbl.text = Int(lastRun.duration).formatTimeDurationToString()
-        lastRunDistanceLbl.text = lastRun.distance.metersToKmForString(places: 2)
+        lastRunPaceLbl.text = "\(Int(lastRun.avePace).formatTimeDurationToString()) H/Km"
+        lastRunSpeedLbl.text = "\(lastRun.aveSpeed.metersToKmForString(places: 2)) Km/H"
+        lastRunDurationLbl.text = "\(Int(lastRun.duration).formatTimeDurationToString()) H"
+        lastRunDistanceLbl.text = "\(lastRun.distance.metersToKmForString(places: 2)) Km"
         
         // Polyline
         var coordinates = [CLLocationCoordinate2D]()
