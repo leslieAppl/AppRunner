@@ -25,10 +25,10 @@ class RunLogCell: UITableViewCell {
         runDateLbl.text = "Date: \(run.date!.formatDateToString())"
         let dur = Int(run.duration)
         runDurationLbl.text = "Duration: \(dur.formatTimeDurationToString())"
-        totalDistanceLbl.text = "distance: \(run.distance.metersToKmForString(places: 2))"
+        totalDistanceLbl.text = "distance: \(run.distance.metersToKmForString(places: 2)) Km"
         let ap = Int(run.avePace)
-        averagePaceLbl.text = "average pace: \(ap.formatTimeDurationToString())"
-        averageSpeedLbl.text = "average speed: \(run.aveSpeed.metersToKmForString(places: 2))"
+        averagePaceLbl.text = "average pace: \(ap.formatTimeDurationToString()) H/Km"
+        averageSpeedLbl.text = "average speed: \(run.aveSpeed.metersToKmForString(places: 2)) Km/H"
     }
 
 }

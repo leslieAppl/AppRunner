@@ -137,7 +137,7 @@ class BeginRunVC: LocationVC {
         lastRunDateLbl.text = lastRun.date?.formatDateToString()
         lastRunPaceLbl.text = "\(Int(lastRun.avePace).formatTimeDurationToString()) H/Km"
         lastRunSpeedLbl.text = "\(lastRun.aveSpeed.metersToKmForString(places: 2)) Km/H"
-        lastRunDurationLbl.text = "\(Int(lastRun.duration).formatTimeDurationToString()) H"
+        lastRunDurationLbl.text = "\(Int(lastRun.duration).formatTimeDurationToString())"
         lastRunDistanceLbl.text = "\(lastRun.distance.metersToKmForString(places: 2)) Km"
         
         // Polyline
