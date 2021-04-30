@@ -65,10 +65,10 @@ class CurrentRunVC: LocationVC {
     
     // MARK: - Variables and Propeties - Map & Run
     var coordinates = [CLLocationCoordinate2D]()
+    var userLocations = [CLLocationCoordinate2D]()
+    
     var startLocation: CLLocation!
     var lastLocation: CLLocation!
-//    var locationCache = [CLLocation]()
-//    var locationCache = []
     var runDistance: Double = 0.0
     var runCurrentPace = 0
     var runCurrentSpeed = 0.0
@@ -115,8 +115,14 @@ class CurrentRunVC: LocationVC {
         
         mapView.delegate = self
         mapView.showsUserLocation = true
-        mapView.userTrackingMode = .none
+        mapView.userTrackingMode = .follow
         
+        centerMapOnUserLocation()
+        
+        if mapView.overlays.count > 0 {
+            mapView.removeOverlays(mapView.overlays)
+        }
+
         // MARK: - UIPanGesture
         let swipeGesture = UIPanGestureRecognizer(target: self, action: #selector(endRunSwiped(sender:)))
         sliderImageView.addGestureRecognizer(swipeGesture)
@@ -249,12 +255,12 @@ class CurrentRunVC: LocationVC {
     }
     
     // MARK: - Map Methods
-    func addCurrentRunToMap(from lastLocation: CLLocation) -> MKPolyline? {
+    func centerMapOnUserLocation() {
+        print(#function)
 
-        self.coordinates.append(lastLocation.coordinate)
-        
-        mapView.setRegion(centerCurrentRoute(from: lastLocation), animated: true)
-        return MKPolyline(coordinates: &coordinates, count: coordinates.count)
+        mapView.userTrackingMode = .follow
+        let coordinateRegion = MKCoordinateRegion(center: mapView.userLocation.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+        mapView.setRegion(coordinateRegion, animated: true)
     }
 
     func centerCurrentRoute(from lastLocation: CLLocation) -> MKCoordinateRegion {
@@ -374,32 +380,20 @@ extension CurrentRunVC {
             locCounter += 1
             self.locations.append(newLocation)
 
-            // Polyline
             if startLocation == nil {
                 startLocation = locations.first
-//                print("$$$ start location: \(String(describing: startLocation))")
-
             }
             else if let location = locations.last {
-//                print("$$$ location: \(location)")
                 eachDistance = lastLocation.distance(from: location)
                 runDistance += lastLocation.distance(from: location)
-                                
+                
                 // Adding Polyline
-                if let polyline = addCurrentRunToMap(from: lastLocation) {
-                    
-                    if mapView.overlays.count > 0 {
-                        mapView.removeOverlays(mapView.overlays)
-                    }
-                    
-                    // this method will call: mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer at MKOverlay protocol by the map view delegate.
-                    mapView.addOverlay(polyline)
-
-                }
-                else {
-                    
-                }
-
+                self.userLocations.append(mapView.userLocation.coordinate)
+                let polyline = MKPolyline(coordinates: userLocations, count: userLocations.count)
+                // this method will call: mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer at MKOverlay protocol by the map view delegate.
+                mapView.addOverlay(polyline)
+                
+                // Adding UI
                 distanceLbl.text = runDistance.metersToKmForString(places: 2)
                 distanceLbl.font = UIFont.monospacedDigitSystemFont(ofSize: 40, weight: .bold)
                 

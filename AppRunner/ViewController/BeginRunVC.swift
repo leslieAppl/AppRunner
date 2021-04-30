@@ -8,7 +8,7 @@
 import UIKit
 import MapKit
 import CoreData
-
+import CoreLocation
 // MARK: - LocationVC
 class BeginRunVC: LocationVC {
     

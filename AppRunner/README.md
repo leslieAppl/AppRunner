@@ -28,5 +28,8 @@
     Added delete log and delete all on RunLogVC
     Set Core Data relationship property's "Delete Rule" as "Cascade"
     
+    0426
+    Updated New UI V1.0
     
-    
+    0427
+    Fixing CLLocation
